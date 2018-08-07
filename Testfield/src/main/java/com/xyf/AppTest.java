@@ -1,5 +1,9 @@
 package com.xyf;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
 import com.xyf.Element;
 import com.xyf.Circuit;
 
@@ -12,13 +16,24 @@ public class AppTest {
 
         Circuit t = new Circuit();
 
-        t.add(new Element("v0", 'v', 0, 0, 0, 1, 5));
-        t.add(new Element("w1", 'w', 0, 1, 1, 1, 0));
-        t.add(new Element("w4", 'w', 1, 1, 2, 1, 0));
-        t.add(new Element("w6", 'w', 1, 0, 2, 0, 0));
-        t.add(new Element("r5", 'r', 2, 0, 2, 1, 15));
-        t.add(new Element("r2", 'r', 1, 0, 1, 1, 5));
-        t.add(new Element("w3", 'w', 0, 0, 1, 0, 0));
+        String path = AppTest.class.getClassLoader().getResource("").getPath() + "circuitData.txt";
+        path = path.replaceAll("%20", " ");
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(path)));
+
+            String temp;
+            while ((temp = br.readLine()) != null) {
+                String[] dataArray = temp.split(" ");
+                t.add(new Element(dataArray[0], dataArray[1].charAt(0), Integer.parseInt(dataArray[2]),
+                        Integer.parseInt(dataArray[3]), Integer.parseInt(dataArray[4]), Integer.parseInt(dataArray[5]),
+                        Double.parseDouble(dataArray[6])));
+
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         t.calculate();
     }

@@ -4,7 +4,7 @@ import com.util.*;
 
 /**
  * @title Element
- * @description 元件抽象类
+ * @description 元件类
  * @author xyf
  * @time 2018-07-09 00:07:54
  */
@@ -12,10 +12,10 @@ public class Element {
     private String name; // 标识
     private char type; // 元件类型
     private Coordinate head, tail; // 位置坐标
-    private int value; // 电压值, 电阻值...
+    private double value; // 电压值, 电阻值...
 
     /** 初始化元件标识 */
-    public Element(String name, char type, int i1, int j1, int i2, int j2, int value) {
+    public Element(String name, char type, int i1, int j1, int i2, int j2, double value) {
         this.name = name;
         this.type = type;
         head = new Coordinate(i1, j1);
@@ -69,7 +69,7 @@ public class Element {
     }
 
     /** 获取电压值, 电阻值... */
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 
@@ -86,6 +86,9 @@ public class Element {
         case 'v':
             return getName() + ", v, " + getHeadLocation().toString() + ", " + getTailLocation().toString() + ", "
                     + value;
+
+        case 'g':
+            return getName() + ", g, " + getHeadLocation().toString();
 
         default:
             return "Error";

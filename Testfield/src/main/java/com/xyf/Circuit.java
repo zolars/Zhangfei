@@ -2,6 +2,8 @@ package com.xyf;
 
 import java.util.ArrayList;
 
+import Jama.Matrix;
+
 import com.util.Coordinate;
 import com.xyf.Element;
 
@@ -14,8 +16,8 @@ public class Circuit {
     ArrayList<Coordinate> nodesList = new ArrayList<>();
     ArrayList<Element> stack = new ArrayList<>();
 
-    ArrayList<ArrayList<Double>> zMatrix = new ArrayList<>();
-    ArrayList<Double> iMatrix = new ArrayList<>();
+    ArrayList<ArrayList<Double>> zArrayList = new ArrayList<>();
+    ArrayList<Double> iArrayList = new ArrayList<>();
 
     /**
      * 初始化
@@ -62,54 +64,17 @@ public class Circuit {
 
     }
 
-    // private void goAdjStack(int[][] adjMatrix, Element e) {
-
-    // Coordinate head = e.getHeadLocation();
-    // Coordinate tail = e.getTailLocation();
-
-    // stack.add(e);
-
-    // adjMatrix[elementsList.indexOf(e)][indexOfNodesList(tail)] = 1;
-    // adjMatrix[elementsList.indexOf(e)][indexOfNodesList(head)] = -1;
-
-    // for (Element etemp : elementsList) {
-    // if (!stack.contains(etemp)) {
-    // if (etemp.getHeadLocation().equals(tail)) {
-    // goAdjStack(adjMatrix, etemp);
-    // } else if (etemp.getTailLocation().equals(tail)) {
-
-    // Coordinate t = etemp.getHeadLocation();
-    // etemp.setHeadLocation(etemp.getTailLocation());
-    // etemp.setTailLocation(t);
-
-    // goAdjStack(adjMatrix, etemp);
-    // }
-    // }
-    // }
-    // }
-
-    public void linearCalculate(ArrayList<ArrayList<Double>> left, ArrayList<Double> right) {
-
-    }
-
     /**
      * 计算电路
      */
     public void calculate() {
-
-        /**
-         * 临接矩阵: 行数为元件数, 列数为节点数. 每行仅分布两个值: 1 & -1, 其余均为0. 用于计算每个节点流入和流出的电流守恒.
-         */
-        // int adjMatrix[][] = new int[elementsList.size()][nodesList.size()];
-        // goAdjStack(adjMatrix, elementsList.get(0));
-
         for (int i = 0; i < nodesList.size(); i++) {
             ArrayList<Double> columnList = new ArrayList<>();
             for (int j = 0; j < nodesList.size(); j++) {
                 columnList.add(j, 0.0);
             }
-            zMatrix.add(i, columnList);
-            iMatrix.add(i, 0.0);
+            zArrayList.add(i, columnList);
+            iArrayList.add(i, 0.0);
         }
 
         for (Element etemp : elementsList) {
@@ -123,11 +88,11 @@ public class Circuit {
                     y = i;
                 }
             }
-            // 生成阻抗矩阵
+            // 生成阻抗矩阵 ArrayList格式
             switch (etemp.getType()) {
             case 'i': {
-                iMatrix.set(x, -etemp.getValue());
-                iMatrix.set(y, etemp.getValue());
+                iArrayList.set(x, -etemp.getValue());
+                iArrayList.set(y, etemp.getValue());
                 break;
             }
             case 'v': {
@@ -137,38 +102,38 @@ public class Circuit {
                 break;
             }
             case 'r': {
-                zMatrix.get(x).set(x, zMatrix.get(x).get(x) + 1 / etemp.getValue());
-                zMatrix.get(y).set(y, zMatrix.get(y).get(y) + 1 / etemp.getValue());
-                zMatrix.get(x).set(y, -1 / etemp.getValue());
-                zMatrix.get(y).set(x, -1 / etemp.getValue());
+                zArrayList.get(x).set(x, zArrayList.get(x).get(x) + 1 / etemp.getValue());
+                zArrayList.get(y).set(y, zArrayList.get(y).get(y) + 1 / etemp.getValue());
+                zArrayList.get(x).set(y, -1 / etemp.getValue());
+                zArrayList.get(y).set(x, -1 / etemp.getValue());
                 break;
             }
             case 'g': {
-                zMatrix.get(zMatrix.size() - 1).set(x, 1.0);
-                for (int i = 0; i < zMatrix.size(); i++) {
-                    zMatrix.get(i).remove(zMatrix.get(i).size() - 1);
+                zArrayList.get(zArrayList.size() - 1).set(x, 1.0);
+                for (int i = 0; i < zArrayList.size(); i++) {
+                    zArrayList.get(i).remove(zArrayList.get(i).size() - 1);
                 }
                 break;
             }
-
             default:
                 break;
             }
-
         }
 
-        for (int i = 0; i < zMatrix.size(); i++) {
-            for (int j = 0; j < zMatrix.get(i).size(); j++) {
-                System.out.printf(" %1.4f,", zMatrix.get(i).get(j));
-            }
-            System.out.println();
-        }
+        // 生成阻抗矩阵 Matrix格式
+        Matrix zMatrix = new Matrix(zArrayList);
 
-        for (int i = 0; i < nodesList.size(); i++) {
-            System.out.printf(" %1.4f\n", iMatrix.get(i));
+        double[] itemp = new double[iArrayList.size()];
+        for (int i = 0; i < itemp.length; i++) {
+            itemp[i] = iArrayList.get(i);
         }
+        Matrix iMatrix = new Matrix(itemp, itemp.length);
 
-        linearCalculate(zMatrix, iMatrix);
+        // 解线性方程组
+        Matrix ansMatrix = zMatrix.solve(iMatrix);
+
+        // 显示解
+        ansMatrix.print(3, 3);
 
     }
 

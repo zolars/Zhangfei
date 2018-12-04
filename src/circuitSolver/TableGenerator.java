@@ -48,8 +48,8 @@ class Result {
     }
 }
 
-class TableChange {
-    private List<Result> list = new ArrayList<Result>();
+class TableGenerator {
+    private List<Result> list;
     private Result[][] table = new Result[100][100];
     private int[][] detected = new int[100][100];
     private int xx, yy;
@@ -67,6 +67,7 @@ class TableChange {
 
         if (type.equals("w") && direction != 0) {
             // 直导线在探测过程中仅充当传递节点, 如果探测结束后还有直导线没有被探测, 则直接当作纯直导线处理
+            table[i][j].setValue(1 - direction % 2);
             detect(i - iChange, j + jChange, direction);
         } else if (type.equals("w") && direction == 0) {
             // 否则利用try-catch强行探测
@@ -75,6 +76,7 @@ class TableChange {
                 detect(i, j + 1, 4);
             } catch (IndexOutOfBoundsException e) {
                 // e.printStackTrace();
+                table[i][j].setValue(0);
             }
 
             try {
@@ -82,6 +84,7 @@ class TableChange {
                 detect(i - 1, j, 3);
             } catch (IndexOutOfBoundsException e) {
                 // e.printStackTrace();
+                table[i][j].setValue(1);
             }
 
         } else if (type.equals("wl1")) {
@@ -240,6 +243,7 @@ class TableChange {
                 table[i][j].setX(node);
             else
                 table[i][j].setY(node);
+            detected[i][j] = direction % 2 - 2;
             return;
         }
 
@@ -247,7 +251,7 @@ class TableChange {
         return;
     }
 
-    private void generateFile() {
+    private void generateTable() {
         for (Result r : list) {
             table[r.getX()][r.getY()] = r;
         }
@@ -285,23 +289,39 @@ class TableChange {
         }
     }
 
-    public TableChange(int xx, int yy, List<Result> list) {
+    public TableGenerator(int xx, int yy, List<Result> list) {
         this.list = list;
         this.xx = xx;
         this.yy = yy;
 
-        this.generateFile();
-
-        System.out.println("The node matrix is as below:");
-        for (int i = 0; i < xx; i++) {
-            for (int j = 0; j < yy; j++) {
-                System.out.print(detected[i][j] + "\t");
-            }
-            System.out.println();
-        }
+        generateTable();
     }
 
     public String getOutput() {
         return output;
+    }
+
+    public Result[][] getTable() {
+        Result[][] newTable = new Result[xx][yy];
+        for (int i = 0; i < xx; i++) {
+            for (int j = 0; j < yy; j++) {
+                newTable[i][j] = table[i][j];
+                if (table[i][j].getName().equals("w")) {
+                    newTable[i][j].setName("w" + table[i][j].getvalue());
+                    newTable[i][j].setValue(0);
+                }
+            }
+        }
+        return newTable;
+    }
+
+    public int[][] getDetected() {
+        int[][] newDetected = new int[xx][yy];
+        for (int i = 0; i < xx; i++) {
+            for (int j = 0; j < yy; j++) {
+                newDetected[i][j] = detected[i][j];
+            }
+        }
+        return newDetected;
     }
 }

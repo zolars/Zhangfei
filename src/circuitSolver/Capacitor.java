@@ -2,12 +2,6 @@ package circuitSolver;
 
 import java.util.ArrayList;
 
-/**
- * Uses Norton Equivalent for the capacitor: A resistor in parallel with a
- * current source
- *
- * @author Alan Yang
- */
 public class Capacitor extends Branch {
 
     private Resistor Req;
@@ -55,15 +49,10 @@ public class Capacitor extends Branch {
     protected void update() {
         // ensure correct Ieq polarity
         /**
-         int factor = 1;
-         double anodeV = getAnode().getVoltage();
-         double cathodeV = getCathode().getVoltage();
-         if (getAnode().getVoltage() < getCathode().getVoltage()){
-         double swapped = anodeV;
-         anodeV = cathodeV;
-         cathodeV = swapped;
-         factor = -1;
-         }
+         * int factor = 1; double anodeV = getAnode().getVoltage(); double cathodeV =
+         * getCathode().getVoltage(); if (getAnode().getVoltage() <
+         * getCathode().getVoltage()){ double swapped = anodeV; anodeV = cathodeV;
+         * cathodeV = swapped; factor = -1; }
          */
         setVoltage(getAnode().getVoltage() - getCathode().getVoltage());
         setCurrent(getAnode().getCurrentInto(this));

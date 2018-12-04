@@ -2,11 +2,6 @@ package circuitSolver;
 
 import java.util.ArrayList;
 
-/**
- * Uses Norton Equivalent model, with a very small internal resistance
- *
- * @author Alan Yang
- */
 public class VoltageSource extends Branch {
 
     private CurrentSource Ieq;
@@ -15,7 +10,7 @@ public class VoltageSource extends Branch {
 
     public VoltageSource(String id, double voltage) {
         super(id, voltage);
-        // 璁剧疆灏忔暟鍗曚綅
+        // 设置小数单位
         internalResistance = 1E-10;
     }
 

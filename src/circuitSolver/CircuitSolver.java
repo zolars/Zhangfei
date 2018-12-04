@@ -1,5 +1,7 @@
 package circuitSolver;
 
+import Jama.*;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,7 +91,7 @@ public class CircuitSolver {
         }
         Collections.sort(nodes);
 
-        // 处理需要诺顿等效的支路
+        // deal with branches that need norton equivalents
         ArrayList<Branch> addedBranches = new ArrayList<Branch>();
         for (Branch branch : branches) {
             if (!(branch instanceof Resistor || branch instanceof CurrentSource)) {
@@ -111,36 +113,34 @@ public class CircuitSolver {
         // 创建矩阵
         Matrix A = new Matrix(nodes.size(), nodes.size());
         Matrix b = new Matrix(nodes.size(), 1);
-        LinearSolver solver = new LinearSolver();
 
         // 诺顿等效使电压源转化为电阻和电流源的等效
         for (Branch branch : branches) {
             int anodeIndex = branch.getAnode().getIndex();
             int cathodeIndex = branch.getCathode().getIndex();
+
             // 如果存在支路电流源
             if (branch instanceof CurrentSource) {
-                b.setValue(b.getValue(anodeIndex, 0) + branch.getValue(), anodeIndex, 0);
-                b.setValue(b.getValue(cathodeIndex, 0) - branch.getValue(), cathodeIndex, 0);
+                b.set(anodeIndex, 0, b.get(anodeIndex, 0) + branch.getValue());
+                b.set(cathodeIndex, 0, b.get(cathodeIndex, 0) - branch.getValue());
             } else {
                 // 如果仅存在电阻
-                A.setValue(A.getValue(anodeIndex, cathodeIndex) - branch.getConductance(), anodeIndex, cathodeIndex);
-                A.setValue(A.getValue(cathodeIndex, anodeIndex) - branch.getConductance(), cathodeIndex, anodeIndex);
-                A.setValue(A.getValue(anodeIndex, anodeIndex) + branch.getConductance(), anodeIndex, anodeIndex);
-                A.setValue(A.getValue(cathodeIndex, cathodeIndex) + branch.getConductance(), cathodeIndex,
-                        cathodeIndex);
+                A.set(anodeIndex, cathodeIndex, A.get(anodeIndex, cathodeIndex) - branch.getConductance());
+                A.set(cathodeIndex, anodeIndex, A.get(cathodeIndex, anodeIndex) - branch.getConductance());
+                A.set(anodeIndex, anodeIndex, A.get(anodeIndex, anodeIndex) + branch.getConductance());
+                A.set(cathodeIndex, cathodeIndex, A.get(cathodeIndex, cathodeIndex) + branch.getConductance());
             }
         }
 
         // 移除接地的矩阵序列
-        A = A.removeRow(0);
-        A = A.removeColumn(0);
-        b = b.removeRow(0);
+        A = A.getMatrix(1, A.getRowDimension() - 1, 1, A.getColumnDimension() - 1);
+        b = b.getMatrix(1, b.getRowDimension() - 1, 0, b.getColumnDimension() - 1);
 
-        Matrix solution = solver.gaussianElimination(A, b);
+        Matrix solution = A.solve(b);
 
         // 设置接地零点
-        for (int i = 0; i < solution.countRows(); i++) {
-            nodes.get(i + 1).setVoltage(solution.getValue(i, 0));
+        for (int i = 0; i < solution.getRowDimension(); i++) {
+            nodes.get(i + 1).setVoltage(solution.get(i, 0));
         }
 
         for (Branch branch : branches) {

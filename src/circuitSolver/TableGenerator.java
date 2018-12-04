@@ -259,14 +259,12 @@ class TableGenerator {
         for (int i = 0; i < xx; i++) {
             for (int j = 0; j < yy; j++) {
                 if (table[i][j] == null) {
-                    table[i][j] = new Result(i, j, "b", 0);
+                    table[i][j] = new Result(i, j, "w", 0);
                     detected[i][j] = -1;
                 }
                 if (table[i][j].getName().charAt(0) != 'w') {
                     table[i][j].setX(-1);
                     table[i][j].setY(-1);
-                } else {
-                    detected[i][j] = -1;
                 }
             }
         }
@@ -283,7 +281,7 @@ class TableGenerator {
         for (int i = 0; i < xx; i++) {
             for (int j = 0; j < yy; j++) {
                 Result temp = table[i][j];
-                if (temp.getName().charAt(0) != 'w' && temp.getName().charAt(0) != 'b') {
+                if (temp.getName().charAt(0) != 'w') {
                     output += new String(table[i][j].getName() + "\t" + table[i][j].getvalue() + "\t" + temp.getX()
                             + "\t" + temp.getY() + "\n");
                 }

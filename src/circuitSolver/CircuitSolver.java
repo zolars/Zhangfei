@@ -2,7 +2,6 @@ package circuitSolver;
 
 import Jama.*;
 
-import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,8 +18,8 @@ public class CircuitSolver {
     // 文件处理与输入输出流
 
     private FileProcessor processor;
-    private String inputFileName;
     private Scanner scanner;
+    private String input;
     private PrintStream output;
 
     private double timeStep;
@@ -31,9 +30,9 @@ public class CircuitSolver {
         return response;
     }
 
-    public CircuitSolver(String inputFileName, double timeStep, PrintStream output) {
-        this.inputFileName = inputFileName;
+    public CircuitSolver(String input, double timeStep, PrintStream output) {
         this.timeStep = timeStep;
+        this.input = input;
         this.output = output;
 
         initialize(); // 预处理, 以构造Nodes和Branches类
@@ -52,7 +51,7 @@ public class CircuitSolver {
         // 读取文件提供的节点信息
         int nodeCount = 0;
         try {
-            scanner = new Scanner(new File(inputFileName));
+            scanner = new Scanner(input);
 
             while (scanner.hasNextLine()) {
                 try {
@@ -82,7 +81,7 @@ public class CircuitSolver {
 
         // 读取文件提供的支路信息
         try {
-            scanner = new Scanner(new File(inputFileName));
+            scanner = new Scanner(input);
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().toLowerCase();
                 processor.processLine(line);

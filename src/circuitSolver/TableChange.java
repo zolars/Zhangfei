@@ -1,8 +1,5 @@
 package circuitSolver;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
 class Result {
@@ -57,6 +54,7 @@ class TableChange {
     private int[][] detected = new int[100][100];
     private int xx, yy;
     private int node = 0;
+    private String output = new String();
 
     private void detect(int i, int j, int direction) {
         if (i < 0 || i > xx - 1 || j < 0 || j > yy - 1) {
@@ -249,7 +247,7 @@ class TableChange {
         return;
     }
 
-    private void generateFile(String inputFileName) {
+    private void generateFile() {
         for (Result r : list) {
             table[r.getX()][r.getY()] = r;
         }
@@ -276,16 +274,6 @@ class TableChange {
             }
         }
 
-        File file = new File(inputFileName);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        String output = new String();
         for (int i = 0; i < xx; i++) {
             for (int j = 0; j < yy; j++) {
                 Result temp = table[i][j];
@@ -295,23 +283,14 @@ class TableChange {
                 }
             }
         }
-
-        try {
-            FileWriter fileWriter = new FileWriter(file);
-
-            fileWriter.write(output);
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    public TableChange(int xx, int yy, List<Result> list, String inputFileName) {
+    public TableChange(int xx, int yy, List<Result> list) {
         this.list = list;
         this.xx = xx;
         this.yy = yy;
 
-        this.generateFile(inputFileName);
+        this.generateFile();
 
         System.out.println("The node matrix is as below:");
         for (int i = 0; i < xx; i++) {
@@ -320,5 +299,9 @@ class TableChange {
             }
             System.out.println();
         }
+    }
+
+    public String getOutput() {
+        return output;
     }
 }

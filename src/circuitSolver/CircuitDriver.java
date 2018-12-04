@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class CircuitDriver {
     private static final String folderName = "C:\\Users\\DELL\\Desktop";
+    private static final String imageFolderName = folderName + "\\image";
     private static final String inputFileName = folderName + "\\CircuitInput.txt";
     private static final String outputFileName = folderName + "\\CircuitOutput.txt";
 

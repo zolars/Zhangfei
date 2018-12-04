@@ -14,21 +14,55 @@ public class CircuitDriver {
     private static final double timeStep = 1E-1;
 
     public static void main(String[] args) throws FileNotFoundException {
-        ArrayList<Result> list = new ArrayList<>();
-        list.add(new Result(0, 0, "wl4", 0));
-        list.add(new Result(0, 2, "v0", 10));
-        list.add(new Result(0, 4, "wl1", 0));
-        list.add(new Result(1, 0, "wt4", 0));
-        list.add(new Result(1, 1, "r0", 2));
-        list.add(new Result(1, 3, "r2", 2));
-        list.add(new Result(1, 4, "wt2", 0));
-        list.add(new Result(2, 0, "wl3", 0));
-        list.add(new Result(2, 1, "r1", 20));
-        list.add(new Result(2, 3, "r3", 20));
-        list.add(new Result(2, 4, "wl2", 0));
+        ArrayList<Result> testList1 = new ArrayList<>();
+        ArrayList<Result> testList2 = new ArrayList<>();
+
+        // test-1
+        testList1.add(new Result(0, 0, "wl4", 0));
+        testList1.add(new Result(0, 1, "w", 0));
+        testList1.add(new Result(0, 2, "v0", 10));
+        testList1.add(new Result(0, 3, "w", 0));
+        testList1.add(new Result(0, 4, "wl1", 0));
+        testList1.add(new Result(1, 0, "wt4", 0));
+        testList1.add(new Result(1, 1, "r0", 2));
+        testList1.add(new Result(1, 2, "w", 0));
+        testList1.add(new Result(1, 3, "r2", 2));
+        testList1.add(new Result(1, 4, "wt2", 0));
+        testList1.add(new Result(2, 0, "wl3", 0));
+        testList1.add(new Result(2, 1, "r1", 20));
+        testList1.add(new Result(2, 2, "w", 0));
+        testList1.add(new Result(2, 3, "r3", 20));
+        testList1.add(new Result(2, 4, "wl2", 0));
+
+        // test-2
+        testList2.add(new Result(0, 0, "wl4", 0));
+        testList2.add(new Result(0, 1, "w", 0));
+        testList2.add(new Result(0, 2, "wt1", 0));
+        testList2.add(new Result(0, 3, "r", 10));
+        testList2.add(new Result(0, 4, "wt1", 0));
+        testList2.add(new Result(0, 5, "w", 0));
+        testList2.add(new Result(0, 6, "wl1", 0));
+        testList2.add(new Result(1, 0, "r", 10));
+        testList2.add(new Result(1, 2, "w", 0));
+        testList2.add(new Result(1, 4, "r", 10));
+        testList2.add(new Result(1, 6, "l2", 1));
+        testList2.add(new Result(2, 0, "wt4", 0));
+        testList2.add(new Result(2, 1, "r", 10));
+        testList2.add(new Result(2, 2, "wt3", 0));
+        testList2.add(new Result(2, 3, "w", 0));
+        testList2.add(new Result(2, 4, "wt3", 0));
+        testList2.add(new Result(2, 5, "r", 10));
+        testList2.add(new Result(2, 6, "wt2", 0));
+        testList2.add(new Result(3, 0, "wl3", 0));
+        testList2.add(new Result(3, 1, "i0", 20));
+        testList2.add(new Result(3, 2, "w", 0));
+        testList2.add(new Result(3, 3, "w", 0));
+        testList2.add(new Result(3, 4, "w", 0));
+        testList2.add(new Result(3, 5, "w", 0));
+        testList2.add(new Result(3, 6, "wl2", 0));
 
         try {
-            TableGenerator TableGenerator = new TableGenerator(3, 5, list);
+            TableGenerator TableGenerator = new TableGenerator(4, 7, testList2);
             String input = TableGenerator.getOutput();
             Result[][] table = TableGenerator.getTable();
             int[][] detected = TableGenerator.getDetected();
@@ -40,6 +74,7 @@ public class CircuitDriver {
                 }
                 System.out.println();
             }
+            System.out.println();
 
             System.out.println("The node matrix is as below:");
             for (int i = 0; i < detected.length; i++) {
@@ -48,11 +83,14 @@ public class CircuitDriver {
                 }
                 System.out.println();
             }
+            System.out.println();
+
+            System.out.println(input);
+
+            new ImageGenerator(imageFolderName, table, detected);
 
             CircuitSolver solver = new CircuitSolver(input, timeStep,
                     new PrintStream(new FileOutputStream(outputFileName)));
-
-            new ImageGenerator(imageFolderName, table, detected);
 
             solver.run(timeAll);
             // System.out.println(solver.getResponse());

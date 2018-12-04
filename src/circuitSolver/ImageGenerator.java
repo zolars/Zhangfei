@@ -174,6 +174,7 @@ public class ImageGenerator {
         String image_r = path + "\\elements\\r.png";
         String image_v = path + "\\elements\\v.png";
         String image_l = path + "\\elements\\l.png";
+        String image_b = path + "\\elements\\b.png";
 
         String targetFile = path + "\\result\\new.png";
 
@@ -241,6 +242,8 @@ public class ImageGenerator {
                         imageToInsert = rotateImage(setAlpha(image_l, color), 90 * (-detected[i][j] - 1));
                     } else if (name.charAt(0) == 'c') {
                         imageToInsert = rotateImage(setAlpha(image_c, color), 90 * (-detected[i][j] - 1));
+                    } else if (name.charAt(0) == 'b') {
+                        imageToInsert = setAlpha(image_b, color);
                     } else {
                         imageToInsert = ImageIO.read(new File(path + "\\error.png"));
                     }

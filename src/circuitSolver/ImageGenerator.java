@@ -1,12 +1,14 @@
 package circuitSolver;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 /**
  * 图片处理工具类
@@ -107,82 +109,79 @@ public class ImageGenerator {
     /**
      * 图片换色 (黑色 -> 彩色)
      * 
-     * @param file       要换色的文件
+     * @param image      要换色的图片
      * @param color      换色目标 16进制色值
      * @param targetFile 输出文件目标
      * @return BufferedImage 修改后图片
      */
-    private BufferedImage setAlpha(String file, int color) {
-        try {
-            ImageIcon imageIcon = new ImageIcon(file);
-            BufferedImage bufferedImage = new BufferedImage(imageIcon.getIconWidth(), imageIcon.getIconHeight(),
-                    BufferedImage.TYPE_4BYTE_ABGR);
-            Graphics2D g2D = (Graphics2D) bufferedImage.getGraphics();
-            g2D.drawImage(imageIcon.getImage(), 0, 0, imageIcon.getImageObserver());
-            for (int j1 = bufferedImage.getMinY(); j1 < bufferedImage.getHeight(); j1++) {
-                for (int j2 = bufferedImage.getMinX(); j2 < bufferedImage.getWidth(); j2++) {
-                    int pixel = bufferedImage.getRGB(j2, j1); // j2横坐标,j1竖坐标
+    private BufferedImage setAlpha(BufferedImage image, int color) {
+        for (int y = image.getMinY(); y < image.getHeight(); y++) {
+            for (int x = image.getMinX(); x < image.getWidth(); x++) {
+                int pixel = image.getRGB(x, y); // j2横坐标,j1竖坐标
 
-                    int[] rgb = new int[3];
-                    rgb[0] = (pixel & 0x00ff0000) >> 16; // 按位与获取red然后右移
-                    rgb[1] = (pixel & 0x0000ff00) >> 8; // 按位与获取green然后右移
-                    rgb[2] = (pixel & 0x000000ff);
-                    int a = (pixel & 0xff000000) >>> 24; // 无符号右移获取alpha值
+                int[] rgb = new int[3];
+                rgb[0] = (pixel & 0x00ff0000) >> 16; // 按位与获取red然后右移
+                rgb[1] = (pixel & 0x0000ff00) >> 8; // 按位与获取green然后右移
+                rgb[2] = (pixel & 0x000000ff);
+                int a = (pixel & 0xff000000) >>> 24; // 无符号右移获取alpha值
 
-                    if (comp(rgb[0], rgb[1], rgb[2]) || a == 0) {
-                        pixel = pixel | 0xffffffff; // 透明或偏向白色射为白色
-                    } else {
-                        pixel = (pixel & 0xff000000) | color; // 否则为设定颜色
-                    }
-                    bufferedImage.setRGB(j2, j1, pixel);
+                if ((rgb[0] == 255 && rgb[1] == 255 && rgb[2] == 255) || a == 0) {
+                    pixel = pixel | 0xffffffff; // 透明或偏向白色射为白色
+                } else {
+                    pixel = (pixel & 0xff000000) | color; // 否则为设定颜色
                 }
+                image.setRGB(x, y, pixel);
             }
-            g2D.drawImage(bufferedImage, 0, 0, imageIcon.getImageObserver());
-            g2D.dispose();
-
-            return bufferedImage;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
+        return image;
     }
 
-    public static boolean comp(int r, int g, int b) {
-        int i = 0;
-        if (r > 200) {
-            i++;
-        }
-        if (g > 200) {
-            i++;
-        }
-        if (b > 200) {
-            i++;
-        }
-        if (i >= 2) {
-            return true;
-        } else {
-            return false;
-        }
+    /**
+     * 图片添加文字
+     * 
+     * @param image  要处理的文件
+     * @param text   添加的文字内容
+     * @param direct 添加的位置 0-下 1-右
+     * @return BufferedImage 修改后图片
+     */
+    private BufferedImage addText(BufferedImage image, String text) {
+        Graphics g = image.getGraphics();
+        g.setColor(Color.BLACK);
+
+        int fontNum = text.length() < 3 ? 120 : 240 / text.length();
+
+        g.setFont(new Font("微软雅黑", Font.ITALIC, fontNum));
+
+        if (text.charAt(0) == 'r')
+            g.drawString(text, 340, 435);
+        else
+            g.drawString(text, 140, 180);
+
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+        return image;
     }
 
     private void generateImage() {
-        String image_w_l = path + "\\elements\\w_l.png";
-        String image_w_t = path + "\\elements\\w_t.png";
-        String image_w_p = path + "\\elements\\w_p.png";
-        String image_w_s = path + "\\elements\\w_s.png";
-        String image_c = path + "\\elements\\c.png";
-        String image_i = path + "\\elements\\i.png";
-        String image_r = path + "\\elements\\r.png";
-        String image_v = path + "\\elements\\v.png";
-        String image_l = path + "\\elements\\l.png";
-        String image_b = path + "\\elements\\b.png";
-
-        String targetFile = path + "\\result.png";
-
         try {
-            BufferedImage imageResult = ImageIO.read(new File(path + "\\elements\\error.png"));
+            BufferedImage image_w_l = ImageIO.read(new File(path + "\\elements\\w_l.png"));
+            BufferedImage image_w_t = ImageIO.read(new File(path + "\\elements\\w_t.png"));
+            BufferedImage image_w_p = ImageIO.read(new File(path + "\\elements\\w_p.png"));
+            BufferedImage image_w_s = ImageIO.read(new File(path + "\\elements\\w_s.png"));
+            BufferedImage image_c = ImageIO.read(new File(path + "\\elements\\c.png"));
+            BufferedImage image_i = ImageIO.read(new File(path + "\\elements\\i.png"));
+            BufferedImage image_r = ImageIO.read(new File(path + "\\elements\\r.png"));
+            BufferedImage image_v = ImageIO.read(new File(path + "\\elements\\v.png"));
+            BufferedImage image_l = ImageIO.read(new File(path + "\\elements\\l.png"));
+            BufferedImage image_b = ImageIO.read(new File(path + "\\elements\\b.png"));
+            BufferedImage image_error = ImageIO.read(new File(path + "\\elements\\error.png"));
+
+            String targetFile = path + "\\result.png";
+
+            BufferedImage imageResult = image_error;
 
             for (int i = 0; i < table.length; i++) {
-                BufferedImage imageRow = ImageIO.read(new File(path + "\\elements\\error.png"));
+                BufferedImage imageRow = image_error;
                 for (int j = 0; j < table[0].length; j++) {
                     // 图片染色
                     int color;
@@ -203,7 +202,16 @@ public class ImageGenerator {
                         color = 0xffff00ff;
                         break;
                     case 6:
-                        color = 0xff0000ff;
+                        color = 0xff00ffff;
+                        break;
+                    case 7:
+                        color = 0xffff8888;
+                        break;
+                    case 8:
+                        color = 0xff88ff88;
+                        break;
+                    case 9:
+                        color = 0xff8888ff;
                         break;
                     default:
                         color = 0;
@@ -232,20 +240,23 @@ public class ImageGenerator {
                         default:
                             throw new IllegalArgumentException("特殊错误, 请检查编译环境:");
                         }
-                    } else if (name.charAt(0) == 'v') {
-                        imageToInsert = rotateImage(setAlpha(image_v, color), 90 * (-detected[i][j] - 1));
-                    } else if (name.charAt(0) == 'i') {
-                        imageToInsert = rotateImage(setAlpha(image_i, color), 90 * (-detected[i][j] - 1));
-                    } else if (name.charAt(0) == 'r') {
-                        imageToInsert = rotateImage(setAlpha(image_r, color), 90 * (-detected[i][j] - 1));
-                    } else if (name.charAt(0) == 'l') {
-                        imageToInsert = rotateImage(setAlpha(image_l, color), 90 * (-detected[i][j] - 1));
-                    } else if (name.charAt(0) == 'c') {
-                        imageToInsert = rotateImage(setAlpha(image_c, color), 90 * (-detected[i][j] - 1));
-                    } else if (name.charAt(0) == 'b') {
-                        imageToInsert = setAlpha(image_b, color);
                     } else {
-                        imageToInsert = ImageIO.read(new File(path + "\\elements\\error.png"));
+                        int angle = 90 * (-detected[i][j] - 1);
+                        if (name.charAt(0) == 'v') {
+                            imageToInsert = addText(rotateImage(image_v, angle), name);
+                        } else if (name.charAt(0) == 'i') {
+                            imageToInsert = addText(rotateImage(image_i, angle), name);
+                        } else if (name.charAt(0) == 'r') {
+                            imageToInsert = addText(rotateImage(image_r, angle), name);
+                        } else if (name.charAt(0) == 'l') {
+                            imageToInsert = addText(rotateImage(image_l, angle), name);
+                        } else if (name.charAt(0) == 'c') {
+                            imageToInsert = addText(rotateImage(image_c, angle), name);
+                        } else if (name.charAt(0) == 'b') {
+                            imageToInsert = image_b;
+                        } else {
+                            imageToInsert = image_error;
+                        }
                     }
                     if (j == 0) {
                         imageRow = imageToInsert;

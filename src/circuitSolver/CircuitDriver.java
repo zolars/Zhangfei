@@ -38,23 +38,23 @@ public class CircuitDriver {
         testList2.add(new Result(0, 0, "wl4", 0));
         testList2.add(new Result(0, 1, "w", 0));
         testList2.add(new Result(0, 2, "wt1", 0));
-        testList2.add(new Result(0, 3, "rkkk", 1000));
+        testList2.add(new Result(0, 3, "r0", 1000));
         testList2.add(new Result(0, 4, "wt1", 0));
         testList2.add(new Result(0, 5, "w", 0));
         testList2.add(new Result(0, 6, "wl1", 0));
-        testList2.add(new Result(1, 0, "r", 10));
+        testList2.add(new Result(1, 0, "r11", 10));
         testList2.add(new Result(1, 2, "w", 0));
-        testList2.add(new Result(1, 4, "r", 10));
-        testList2.add(new Result(1, 6, "rkkk", 1000));
+        testList2.add(new Result(1, 4, "r222", 10));
+        testList2.add(new Result(1, 6, "r3", 1000));
         testList2.add(new Result(2, 0, "wt4", 0));
         testList2.add(new Result(2, 1, "r", 10));
         testList2.add(new Result(2, 2, "wt3", 0));
         testList2.add(new Result(2, 3, "w", 0));
         testList2.add(new Result(2, 4, "wt3", 0));
-        testList2.add(new Result(2, 5, "r", 10));
+        testList2.add(new Result(2, 5, "r5", 10));
         testList2.add(new Result(2, 6, "wt2", 0));
         testList2.add(new Result(3, 0, "wl3", 0));
-        testList2.add(new Result(3, 1, "v0", 20));
+        testList2.add(new Result(3, 1, "v", 20));
         testList2.add(new Result(3, 2, "w", 0));
         testList2.add(new Result(3, 3, "w", 0));
         testList2.add(new Result(3, 4, "w", 0));
@@ -83,7 +83,7 @@ public class CircuitDriver {
                 System.out.println();
             }
 
-            // new ImageGenerator(imageFolderName, table, detected);
+            new ImageGenerator(imageFolderName, table, detected);
 
             CircuitSolver solver = new CircuitSolver(input, timeStep,
                     new PrintStream(new FileOutputStream(outputFileName)));

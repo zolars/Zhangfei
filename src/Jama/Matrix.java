@@ -59,7 +59,7 @@ import Jama.util.*;
  * </DL>
  *
  * @author The MathWorks, Inc. and the National Institute of Standards and
- * Technology.
+ *         Technology.
  * @version 5 August 1998
  */
 

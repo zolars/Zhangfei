@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -14,10 +15,20 @@ import javax.imageio.ImageIO;
  * 图片处理工具类
  */
 public class ImageGenerator {
-
-    private String path;
     private Result[][] table;
     private int[][] detected;
+
+    private BufferedImage image_w_l;
+    private BufferedImage image_w_t;
+    private BufferedImage image_w_p;
+    private BufferedImage image_w_s;
+    private BufferedImage image_c;
+    private BufferedImage image_i;
+    private BufferedImage image_r;
+    private BufferedImage image_v;
+    private BufferedImage image_l;
+    private BufferedImage image_b;
+    private BufferedImage image_error;
 
     /**
      * 旋转图片为指定角度
@@ -137,6 +148,35 @@ public class ImageGenerator {
     }
 
     /**
+     * 图片换色 (彩色 -> 黑色)
+     * 
+     * @param image      要换色的图片
+     * @param targetFile 输出文件目标
+     * @return BufferedImage 修改后图片
+     */
+    private BufferedImage setNonAlpha(BufferedImage image) {
+        for (int y = image.getMinY(); y < image.getHeight(); y++) {
+            for (int x = image.getMinX(); x < image.getWidth(); x++) {
+                int pixel = image.getRGB(x, y); // j2横坐标,j1竖坐标
+
+                int[] rgb = new int[3];
+                rgb[0] = (pixel & 0x00ff0000) >> 16; // 按位与获取red然后右移
+                rgb[1] = (pixel & 0x0000ff00) >> 8; // 按位与获取green然后右移
+                rgb[2] = (pixel & 0x000000ff);
+                int a = (pixel & 0xff000000) >>> 24; // 无符号右移获取alpha值
+
+                if ((rgb[0] == 255 && rgb[1] == 255 && rgb[2] == 255) || a == 0) {
+                    pixel = pixel | 0xffffffff; // 透明或偏向白色射为白色
+                } else {
+                    pixel = (pixel & 0xff000000) | 0xff000000; // 否则为设定颜色
+                }
+                image.setRGB(x, y, pixel);
+            }
+        }
+        return image;
+    }
+
+    /**
      * 图片添加文字
      * 
      * @param image  要处理的文件
@@ -148,36 +188,48 @@ public class ImageGenerator {
         Graphics g = image.getGraphics();
         g.setColor(Color.BLACK);
 
-        int fontNum = text.length() < 3 ? 120 : 240 / text.length();
+        int fontNum = text.length() < 3 ? 60 : 120 / text.length();
 
         g.setFont(new Font("微软雅黑", Font.ITALIC, fontNum));
 
         if (text.charAt(0) == 'r')
-            g.drawString(text, 340, 435);
+            g.drawString(text, 170, 217);
         else
-            g.drawString(text, 140, 180);
+            g.drawString(text, 70, 90);
 
         g.drawImage(image, 0, 0, null);
         g.dispose();
         return image;
     }
 
-    private void generateImage() {
+    private void readImage(String path) {
         try {
-            BufferedImage image_w_l = ImageIO.read(new File(path + "\\elements\\w_l.png"));
-            BufferedImage image_w_t = ImageIO.read(new File(path + "\\elements\\w_t.png"));
-            BufferedImage image_w_p = ImageIO.read(new File(path + "\\elements\\w_p.png"));
-            BufferedImage image_w_s = ImageIO.read(new File(path + "\\elements\\w_s.png"));
-            BufferedImage image_c = ImageIO.read(new File(path + "\\elements\\c.png"));
-            BufferedImage image_i = ImageIO.read(new File(path + "\\elements\\i.png"));
-            BufferedImage image_r = ImageIO.read(new File(path + "\\elements\\r.png"));
-            BufferedImage image_v = ImageIO.read(new File(path + "\\elements\\v.png"));
-            BufferedImage image_l = ImageIO.read(new File(path + "\\elements\\l.png"));
-            BufferedImage image_b = ImageIO.read(new File(path + "\\elements\\b.png"));
-            BufferedImage image_error = ImageIO.read(new File(path + "\\elements\\error.png"));
+            image_w_l = ImageIO.read(new File(path + "\\elements\\w_l.png"));
+            image_w_t = ImageIO.read(new File(path + "\\elements\\w_t.png"));
+            image_w_p = ImageIO.read(new File(path + "\\elements\\w_p.png"));
+            image_w_s = ImageIO.read(new File(path + "\\elements\\w_s.png"));
+            image_c = ImageIO.read(new File(path + "\\elements\\c.png"));
+            image_i = ImageIO.read(new File(path + "\\elements\\i.png"));
+            image_r = ImageIO.read(new File(path + "\\elements\\r.png"));
+            image_v = ImageIO.read(new File(path + "\\elements\\v.png"));
+            image_l = ImageIO.read(new File(path + "\\elements\\l.png"));
+            image_b = ImageIO.read(new File(path + "\\elements\\b.png"));
+            image_error = ImageIO.read(new File(path + "\\elements\\error.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            String targetFile = path + "\\result.png";
+    private void generateSimpleImage(BufferedImage image, String targetFile) {
+        try {
+            ImageIO.write(setNonAlpha(image), targetFile.split("\\.")[1], new File(targetFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private BufferedImage generateVoltageImage(String targetFile) {
+        try {
             BufferedImage imageResult = image_error;
 
             for (int i = 0; i < table.length; i++) {
@@ -275,15 +327,25 @@ public class ImageGenerator {
             // 输出想要的图片
             ImageIO.write(imageResult, targetFile.split("\\.")[1], new File(targetFile));
 
-        } catch (Exception e) {
+            return imageResult;
+        } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
+    private void generateCircuitImage(String targetFile) {
+
+    }
+
     public ImageGenerator(String path, Result[][] table, int[][] detected) {
-        this.path = path;
         this.table = table;
         this.detected = detected;
-        generateImage();
+
+        readImage(path);
+
+        BufferedImage voltageResultImage = generateVoltageImage(path + "\\VoltageResult.png");
+        generateSimpleImage(voltageResultImage, path + "\\SimpleResult.png");
+        generateCircuitImage(path + "\\CircuitResult.png");
     }
 }

@@ -67,13 +67,23 @@ public class CircuitDriver {
             Result[][] table = TableGenerator.getTable();
             int[][] detected = TableGenerator.getDetected();
 
-            System.out.println("The original matrix is as below:");
+            System.out.println("The original matrix <table.name> is as below:");
             for (int i = 0; i < table.length; i++) {
                 for (int j = 0; j < table[0].length; j++) {
                     System.out.print(table[i][j].getName() + "\t");
                 }
                 System.out.println();
             }
+            System.out.println();
+
+            System.out.println("The original matrix <table.value> is as below:");
+            for (int i = 0; i < table.length; i++) {
+                for (int j = 0; j < table[0].length; j++) {
+                    System.out.print(table[i][j].getValue() + "\t");
+                }
+                System.out.println();
+            }
+            System.out.println();
 
             System.out.println("The node matrix is as below:");
             for (int i = 0; i < detected.length; i++) {
@@ -82,6 +92,7 @@ public class CircuitDriver {
                 }
                 System.out.println();
             }
+            System.out.println();
 
             new ImageGenerator(imageFolderName, table, detected);
 

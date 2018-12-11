@@ -43,7 +43,7 @@ class Result {
         return name;
     }
 
-    public int getvalue() {
+    public int getValue() {
         return value;
     }
 }
@@ -71,19 +71,17 @@ class TableGenerator {
             detect(i - iChange, j + jChange, direction);
         } else if (type.equals("w") && direction == 0) {
             // 否则利用try-catch强行探测
-            try {
+            try { // 横向直导线
                 detect(i, j - 1, 2);
                 detect(i, j + 1, 4);
             } catch (IndexOutOfBoundsException e) {
-                // e.printStackTrace();
                 table[i][j].setValue(0);
             }
 
-            try {
+            try { // 纵向直导线
                 detect(i + 1, j, 1);
                 detect(i - 1, j, 3);
             } catch (IndexOutOfBoundsException e) {
-                // e.printStackTrace();
                 table[i][j].setValue(1);
             }
 
@@ -251,7 +249,7 @@ class TableGenerator {
         return;
     }
 
-    private void generateTable() {
+    private void generateTableAndDetect() {
         for (Result r : list) {
             table[r.getX()][r.getY()] = r;
         }
@@ -279,12 +277,18 @@ class TableGenerator {
                 }
             }
         }
+    }
 
+    private void generateMeshCircuit() {
+
+    }
+
+    private void generateOutput() {
         for (int i = 0; i < xx; i++) {
             for (int j = 0; j < yy; j++) {
                 Result temp = table[i][j];
                 if (temp.getName().charAt(0) != 'w' && temp.getName().charAt(0) != 'b') {
-                    output += new String(table[i][j].getName() + "\t" + table[i][j].getvalue() + "\t" + temp.getX()
+                    output += new String(table[i][j].getName() + "\t" + table[i][j].getValue() + "\t" + temp.getX()
                             + "\t" + temp.getY() + "\n");
                 }
             }
@@ -296,7 +300,9 @@ class TableGenerator {
         this.xx = xx;
         this.yy = yy;
 
-        generateTable();
+        generateTableAndDetect();
+        generateMeshCircuit();
+        generateOutput();
     }
 
     public String getOutput() {
@@ -309,8 +315,8 @@ class TableGenerator {
             for (int j = 0; j < yy; j++) {
                 newTable[i][j] = table[i][j];
                 if (table[i][j].getName().equals("w")) {
-                    newTable[i][j].setName("w" + table[i][j].getvalue());
-                    newTable[i][j].setValue(0);
+                    newTable[i][j].setName("w" + table[i][j].getValue());
+                    // newTable[i][j].setValue(0);
                 }
             }
         }

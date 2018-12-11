@@ -49,46 +49,34 @@ public class CircuitDriver {
 
         // test-1
         testList1.add(new Result(0, 0, "wl4", 0));
-        testList1.add(new Result(0, 1, "w", 0));
         testList1.add(new Result(0, 2, "v0", 10));
-        testList1.add(new Result(0, 3, "w", 0));
         testList1.add(new Result(0, 4, "wl1", 0));
         testList1.add(new Result(1, 0, "wt4", 0));
         testList1.add(new Result(1, 1, "r0", 2));
-        testList1.add(new Result(1, 2, "w", 0));
         testList1.add(new Result(1, 3, "r2", 2));
         testList1.add(new Result(1, 4, "wt2", 0));
         testList1.add(new Result(2, 0, "wl3", 0));
         testList1.add(new Result(2, 1, "r1", 20));
-        testList1.add(new Result(2, 2, "w", 0));
         testList1.add(new Result(2, 3, "r3", 20));
         testList1.add(new Result(2, 4, "wl2", 0));
 
         // test-2
         testList2.add(new Result(0, 0, "wl4", 0));
-        testList2.add(new Result(0, 1, "w", 0));
         testList2.add(new Result(0, 2, "wt1", 0));
         testList2.add(new Result(0, 3, "r0", 1000));
         testList2.add(new Result(0, 4, "wt1", 0));
-        testList2.add(new Result(0, 5, "w", 0));
         testList2.add(new Result(0, 6, "wl1", 0));
         testList2.add(new Result(1, 0, "r11", 10));
-        testList2.add(new Result(1, 2, "w", 0));
         testList2.add(new Result(1, 4, "r222", 10));
         testList2.add(new Result(1, 6, "r3", 1000));
         testList2.add(new Result(2, 0, "wt4", 0));
         testList2.add(new Result(2, 1, "r", 10));
         testList2.add(new Result(2, 2, "wt3", 0));
-        testList2.add(new Result(2, 3, "w", 0));
         testList2.add(new Result(2, 4, "wt3", 0));
         testList2.add(new Result(2, 5, "r5", 10));
         testList2.add(new Result(2, 6, "wt2", 0));
         testList2.add(new Result(3, 0, "wl3", 0));
         testList2.add(new Result(3, 1, "v", 20));
-        testList2.add(new Result(3, 2, "w", 0));
-        testList2.add(new Result(3, 3, "w", 0));
-        testList2.add(new Result(3, 4, "w", 0));
-        testList2.add(new Result(3, 5, "w", 0));
         testList2.add(new Result(3, 6, "wl2", 0));
 
         try {
@@ -103,15 +91,13 @@ public class CircuitDriver {
             int[][] detected = TableGenerator.getDetected();
             int[][] circuitTable = TableGenerator.getCircuitTable();
 
-            // solve the problem
-            CircuitSolver solver = new CircuitSolver(input, timeStep,
-                    new PrintStream(new FileOutputStream(outputFileName)));
-            solver.run(timeAll);
-
             showMeTheTables(table, detected, circuitTable);
-
             new ImageGenerator(imageFolderName, table, detected, circuitTable);
 
+            // solve the problem
+            // CircuitSolver solver = new CircuitSolver(input, timeStep,
+            // new PrintStream(new FileOutputStream(outputFileName)));
+            // solver.run(timeAll);
             // System.out.println(solver.getResponse());
 
         } catch (Exception e) {

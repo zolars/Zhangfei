@@ -13,6 +13,36 @@ public class CircuitDriver {
     private static final double timeAll = 5;
     private static final double timeStep = 1E-1;
 
+    private static void showMeTheTables(Result[][] table, int[][] detected, int[][] circuitTable) {
+        // show me the tables
+        System.out.println("The original matrix <table.name> is as below:");
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[0].length; j++) {
+                System.out.print(table[i][j].getName() + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        System.out.println("The node matrix <detected> is as below:");
+        for (int i = 0; i < detected.length; i++) {
+            for (int j = 0; j < detected[0].length; j++) {
+                System.out.print(detected[i][j] + "\t");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        System.out.println("The circuit paths <circuitTable> is as below:");
+        for (int i = 0; i < circuitTable.length; i++) {
+            for (int j = 0; j < circuitTable[0].length; j++) {
+                System.out.print(circuitTable[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
     public static void main(String[] args) throws FileNotFoundException {
         ArrayList<Result> testList1 = new ArrayList<>();
         ArrayList<Result> testList2 = new ArrayList<>();
@@ -62,44 +92,26 @@ public class CircuitDriver {
         testList2.add(new Result(3, 6, "wl2", 0));
 
         try {
+            // read the data
             TableGenerator TableGenerator = new TableGenerator(4, 7, testList2);
+
+            // get the nodes
             String input = TableGenerator.getOutput();
+
+            // get the tables
             Result[][] table = TableGenerator.getTable();
             int[][] detected = TableGenerator.getDetected();
+            int[][] circuitTable = TableGenerator.getCircuitTable();
 
-            System.out.println("The original matrix <table.name> is as below:");
-            for (int i = 0; i < table.length; i++) {
-                for (int j = 0; j < table[0].length; j++) {
-                    System.out.print(table[i][j].getName() + "\t");
-                }
-                System.out.println();
-            }
-            System.out.println();
-
-            System.out.println("The original matrix <table.value> is as below:");
-            for (int i = 0; i < table.length; i++) {
-                for (int j = 0; j < table[0].length; j++) {
-                    System.out.print(table[i][j].getValue() + "\t");
-                }
-                System.out.println();
-            }
-            System.out.println();
-
-            System.out.println("The node matrix is as below:");
-            for (int i = 0; i < detected.length; i++) {
-                for (int j = 0; j < detected[0].length; j++) {
-                    System.out.print(detected[i][j] + "\t");
-                }
-                System.out.println();
-            }
-            System.out.println();
-
-            new ImageGenerator(imageFolderName, table, detected);
-
+            // solve the problem
             CircuitSolver solver = new CircuitSolver(input, timeStep,
                     new PrintStream(new FileOutputStream(outputFileName)));
-
             solver.run(timeAll);
+
+            showMeTheTables(table, detected, circuitTable);
+
+            new ImageGenerator(imageFolderName, table, detected, circuitTable);
+
             // System.out.println(solver.getResponse());
 
         } catch (Exception e) {

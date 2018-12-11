@@ -50,8 +50,9 @@ class Result {
 
 class TableGenerator {
     private List<Result> list;
-    private Result[][] table = new Result[100][100];
-    private int[][] detected = new int[100][100];
+    private Result[][] table;
+    private int[][] detected;
+    private int[][] circuitTable;
     private int xx, yy;
     private int node = 0;
     private String output = new String();
@@ -250,6 +251,9 @@ class TableGenerator {
     }
 
     private void generateTableAndDetect() {
+        table = new Result[xx][yy];
+        detected = new int[xx][yy];
+
         for (Result r : list) {
             table[r.getX()][r.getY()] = r;
         }
@@ -277,10 +281,111 @@ class TableGenerator {
                 }
             }
         }
+
+        for (int i = 0; i < xx; i++) {
+            for (int j = 0; j < yy; j++) {
+                if (table[i][j].getName().equals("w")) {
+                    table[i][j].setName("w" + table[i][j].getValue());
+                    table[i][j].setValue(0);
+                }
+            }
+        }
     }
 
     private void generateMeshCircuit() {
+        circuitTable = new int[xx * 3][yy * 3];
 
+        // set all to zero
+        for (int i = 0; i < circuitTable.length; i++) {
+            for (int j = 0; j < circuitTable[0].length; j++) {
+                circuitTable[i][j] = 0;
+            }
+        }
+
+        // add all the elements
+        for (int i = 0; i < xx; i++) {
+            for (int j = 0; j < yy; j++) {
+                String name = table[i][j].getName();
+                String names = name.substring(1);
+                if (name.charAt(0) == 'b') {
+                    // do nothing
+                } else if (name.charAt(0) == 'w') {
+                    switch (name.substring(1)) {
+                    case "0":
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        break;
+                    case "1":
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        break;
+                    case "l1":
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        break;
+                    case "l2":
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        break;
+                    case "l3":
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        break;
+                    case "l4":
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        break;
+                    case "t1":
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        break;
+                    case "t2":
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        break;
+                    case "t3":
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        break;
+                    case "t4":
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        break;
+                    case "p":
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        break;
+                    }
+                } else {
+                    if (detected[i][j] == -1) {
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                    } else {
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                    }
+                }
+            }
+        }
     }
 
     private void generateOutput() {
@@ -310,26 +415,14 @@ class TableGenerator {
     }
 
     public Result[][] getTable() {
-        Result[][] newTable = new Result[xx][yy];
-        for (int i = 0; i < xx; i++) {
-            for (int j = 0; j < yy; j++) {
-                newTable[i][j] = table[i][j];
-                if (table[i][j].getName().equals("w")) {
-                    newTable[i][j].setName("w" + table[i][j].getValue());
-                    // newTable[i][j].setValue(0);
-                }
-            }
-        }
-        return newTable;
+        return table;
     }
 
     public int[][] getDetected() {
-        int[][] newDetected = new int[xx][yy];
-        for (int i = 0; i < xx; i++) {
-            for (int j = 0; j < yy; j++) {
-                newDetected[i][j] = detected[i][j];
-            }
-        }
-        return newDetected;
+        return detected;
+    }
+
+    public int[][] getCircuitTable() {
+        return circuitTable;
     }
 }

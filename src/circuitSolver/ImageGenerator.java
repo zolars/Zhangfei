@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 public class ImageGenerator {
     private Result[][] table;
     private int[][] detected;
+    private int[][] circuitTable;
 
     private BufferedImage image_w_l;
     private BufferedImage image_w_t;
@@ -338,9 +339,10 @@ public class ImageGenerator {
 
     }
 
-    public ImageGenerator(String path, Result[][] table, int[][] detected) {
+    public ImageGenerator(String path, Result[][] table, int[][] detected, int[][] circuitTable) {
         this.table = table;
         this.detected = detected;
+        this.circuitTable = circuitTable;
 
         readImage(path);
 

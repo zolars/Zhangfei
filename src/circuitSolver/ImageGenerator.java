@@ -335,8 +335,64 @@ public class ImageGenerator {
         }
     }
 
-    private void generateCircuitImage(String targetFile) {
+    private void generateCircuitImage(int[][] circuitTable, BufferedImage image, String targetFile) {
+        for (int i = 0; i < circuitTable.length; i++) {
+            for (int j = 0; j < circuitTable[0].length; j++) {
+                // 图片染色
+                int color;
+                switch (circuitTable[i][j]) {
+                case 0:
+                    color = 0;
+                    break;
+                case 1:
+                    color = 0;
+                    break;
+                case 2:
+                    color = 0xff00ff00;
+                    break;
+                case 3:
+                    color = 0xff0000ff;
+                    break;
+                case 4:
+                    color = 0xffffff00;
+                    break;
+                case 5:
+                    color = 0xffff00ff;
+                    break;
+                case 6:
+                    color = 0xff00ffff;
+                    break;
+                case 7:
+                    color = 0xffff8888;
+                    break;
+                case 8:
+                    color = 0xff88ff88;
+                    break;
+                case 9:
+                    color = 0xff8888ff;
+                    break;
+                default:
+                    color = 0;
+                    break;
+                }
 
+                for (int y = i * 133 + 46; y < i * 133 + 87; y++) {
+                    for (int x = j * 133 + 46; x < j * 133 + 87; x++) {
+                        int pixel = image.getRGB(x, y); // j2横坐标,j1竖坐标
+                        if (pixel == 0xffffffff)
+                            pixel = color; // 否则为设定颜色
+                        if (pixel != 0)
+                            image.setRGB(x, y, pixel);
+                    }
+                }
+            }
+        }
+
+        try {
+            ImageIO.write(image, targetFile.split("\\.")[1], new File(targetFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public ImageGenerator(String path, Result[][] table, int[][] detected, int[][] circuitTable) {
@@ -348,6 +404,6 @@ public class ImageGenerator {
 
         BufferedImage voltageResultImage = generateVoltageImage(path + "\\VoltageResult.png");
         generateSimpleImage(voltageResultImage, path + "\\SimpleResult.png");
-        generateCircuitImage(path + "\\CircuitResult.png");
+        generateCircuitImage(circuitTable, voltageResultImage, path + "\\CircuitResult.png");
     }
 }

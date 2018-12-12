@@ -114,7 +114,7 @@ class TableGenerator {
         // set all to zero
         for (int i = 0; i < circuitTable.length; i++) {
             for (int j = 0; j < circuitTable[0].length; j++) {
-                circuitTable[i][j] = 0;
+                circuitTable[i][j] = -1;
             }
         }
 
@@ -124,9 +124,9 @@ class TableGenerator {
                     if (table[i][j] == null)
                         table[i][j] = new Result(i, j, "w", 0);
 
-                    circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
-                    circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                    circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                    circuitTable[i * 3 + 1][j * 3 + 0] = 0; // 左
+                    circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                    circuitTable[i * 3 + 1][j * 3 + 2] = 0; // 右
                 }
             } else if (!(row[i][0] == row[i][1] && row[i][0] == -1)) {
                 throw new IllegalArgumentException("节点识别错误...");
@@ -139,9 +139,9 @@ class TableGenerator {
                     if (table[j][i] == null)
                         table[j][i] = new Result(i, j, "w", 0);
 
-                    circuitTable[j * 3 + 0][i * 3 + 1] = 1; // 上
-                    circuitTable[j * 3 + 1][i * 3 + 1] = 1; // 中
-                    circuitTable[j * 3 + 2][i * 3 + 1] = 1; // 下
+                    circuitTable[j * 3 + 0][i * 3 + 1] = 0; // 上
+                    circuitTable[j * 3 + 1][i * 3 + 1] = 0; // 中
+                    circuitTable[j * 3 + 2][i * 3 + 1] = 0; // 下
                 }
             } else if (!(column[i][0] == column[i][1] && column[i][0] == -1)) {
                 throw new IllegalArgumentException("节点识别错误...");
@@ -154,55 +154,55 @@ class TableGenerator {
                 if (table[i][j] != null) {
                     switch (table[i][j].getName()) {
                     case "wl1":
-                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 0; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 0; // 下
                         break;
                     case "wl2":
-                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 0; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 0; // 左
                         break;
                     case "wl3":
-                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 0; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 0; // 右
                         break;
                     case "wl4":
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
-                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 0; // 右
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 0; // 下
                         break;
                     case "wt1":
-                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
-                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 0; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 0; // 右
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 0; // 下
                         break;
                     case "wt2":
-                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
-                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 0; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 0; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 0; // 下
                         break;
                     case "wt3":
-                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
-                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 0; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 0; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 0; // 右
                         break;
                     case "wt4":
-                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
-                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 0; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 0; // 右
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 0; // 下
                         break;
                     case "wp":
-                        circuitTable[i * 3 + 0][j * 3 + 1] = 1; // 上
-                        circuitTable[i * 3 + 1][j * 3 + 0] = 1; // 左
-                        circuitTable[i * 3 + 1][j * 3 + 1] = 1; // 中
-                        circuitTable[i * 3 + 1][j * 3 + 2] = 1; // 右
-                        circuitTable[i * 3 + 2][j * 3 + 1] = 1; // 下
+                        circuitTable[i * 3 + 0][j * 3 + 1] = 0; // 上
+                        circuitTable[i * 3 + 1][j * 3 + 0] = 0; // 左
+                        circuitTable[i * 3 + 1][j * 3 + 1] = 0; // 中
+                        circuitTable[i * 3 + 1][j * 3 + 2] = 0; // 右
+                        circuitTable[i * 3 + 2][j * 3 + 1] = 0; // 下
                         break;
                     }
                 }
@@ -225,7 +225,7 @@ class TableGenerator {
         }
     }
 
-    private void detect(int i, int j, int direction) {
+    private void detectNode(int i, int j, int direction) {
         if (i < 0 || i > xx - 1 || j < 0 || j > yy - 1) {
             throw new IndexOutOfBoundsException("Stable error");
         }
@@ -237,19 +237,19 @@ class TableGenerator {
         if (type.equals("w") && direction != 0) {
             // 直导线在探测过程中仅充当传递节点, 如果探测结束后还有直导线没有被探测, 则直接当作纯直导线处理
             table[i][j].setValue(1 - direction % 2);
-            detect(i - iChange, j + jChange, direction);
+            detectNode(i - iChange, j + jChange, direction);
         } else if (type.equals("w") && direction == 0) {
             // 否则利用try-catch强行探测
             try { // 横向直导线
-                detect(i, j - 1, 2);
-                detect(i, j + 1, 4);
+                detectNode(i, j - 1, 2);
+                detectNode(i, j + 1, 4);
             } catch (IndexOutOfBoundsException e) {
                 table[i][j].setValue(0);
             }
 
             try { // 纵向直导线
-                detect(i + 1, j, 1);
-                detect(i - 1, j, 3);
+                detectNode(i + 1, j, 1);
+                detectNode(i - 1, j, 3);
             } catch (IndexOutOfBoundsException e) {
                 table[i][j].setValue(1);
             }
@@ -259,12 +259,12 @@ class TableGenerator {
                 throw new IllegalArgumentException("节点识别错误. 位置: [" + i + ", " + j + "]");
             } else {
                 if (direction == 0) {
-                    detect(i + 1, j, 1);
-                    detect(i, j - 1, 2);
+                    detectNode(i + 1, j, 1);
+                    detectNode(i, j - 1, 2);
                 } else if (direction == 3) {
-                    detect(i, j - 1, 2);
+                    detectNode(i, j - 1, 2);
                 } else if (direction == 4) {
-                    detect(i + 1, j, 1);
+                    detectNode(i + 1, j, 1);
                 }
             }
         } else if (type.equals("wl2")) {
@@ -272,12 +272,12 @@ class TableGenerator {
                 throw new IllegalArgumentException("节点识别错误. 位置: [" + i + ", " + j + "]");
             } else {
                 if (direction == 0) {
-                    detect(i, j - 1, 2);
-                    detect(i - 1, j, 3);
+                    detectNode(i, j - 1, 2);
+                    detectNode(i - 1, j, 3);
                 } else if (direction == 1) {
-                    detect(i, j - 1, 2);
+                    detectNode(i, j - 1, 2);
                 } else if (direction == 4) {
-                    detect(i - 1, j, 3);
+                    detectNode(i - 1, j, 3);
                 }
             }
         } else if (type.equals("wl3")) {
@@ -285,12 +285,12 @@ class TableGenerator {
                 throw new IllegalArgumentException("节点识别错误. 位置: [" + i + ", " + j + "]");
             } else {
                 if (direction == 0) {
-                    detect(i - 1, j, 3);
-                    detect(i, j + 1, 4);
+                    detectNode(i - 1, j, 3);
+                    detectNode(i, j + 1, 4);
                 } else if (direction == 1) {
-                    detect(i, j + 1, 4);
+                    detectNode(i, j + 1, 4);
                 } else if (direction == 2) {
-                    detect(i - 1, j, 3);
+                    detectNode(i - 1, j, 3);
                 }
             }
         } else if (type.equals("wl4")) {
@@ -298,12 +298,12 @@ class TableGenerator {
                 throw new IllegalArgumentException("节点识别错误. 位置: [" + i + ", " + j + "]");
             } else {
                 if (direction == 0) {
-                    detect(i, j + 1, 4);
-                    detect(i + 1, j, 1);
+                    detectNode(i, j + 1, 4);
+                    detectNode(i + 1, j, 1);
                 } else if (direction == 2) {
-                    detect(i + 1, j, 1);
+                    detectNode(i + 1, j, 1);
                 } else if (direction == 3) {
-                    detect(i, j + 1, 4);
+                    detectNode(i, j + 1, 4);
                 }
             }
         } else if (type.equals("wt1")) {
@@ -311,18 +311,18 @@ class TableGenerator {
                 throw new IllegalArgumentException("节点识别错误. 位置: [" + i + ", " + j + "]");
             } else {
                 if (direction == 0) {
-                    detect(i + 1, j, 1);
-                    detect(i, j - 1, 2);
-                    detect(i, j + 1, 4);
+                    detectNode(i + 1, j, 1);
+                    detectNode(i, j - 1, 2);
+                    detectNode(i, j + 1, 4);
                 } else if (direction == 2) {
-                    detect(i + 1, j, 1);
-                    detect(i, j - 1, 2);
+                    detectNode(i + 1, j, 1);
+                    detectNode(i, j - 1, 2);
                 } else if (direction == 3) {
-                    detect(i, j - 1, 2);
-                    detect(i, j + 1, 4);
+                    detectNode(i, j - 1, 2);
+                    detectNode(i, j + 1, 4);
                 } else if (direction == 4) {
-                    detect(i, j + 1, 4);
-                    detect(i + 1, j, 1);
+                    detectNode(i, j + 1, 4);
+                    detectNode(i + 1, j, 1);
                 }
             }
         } else if (type.equals("wt2")) {
@@ -330,18 +330,18 @@ class TableGenerator {
                 throw new IllegalArgumentException("节点识别错误. 位置: [" + i + ", " + j + "]");
             } else {
                 if (direction == 0) {
-                    detect(i + 1, j, 1);
-                    detect(i, j - 1, 2);
-                    detect(i - 1, j, 3);
+                    detectNode(i + 1, j, 1);
+                    detectNode(i, j - 1, 2);
+                    detectNode(i - 1, j, 3);
                 } else if (direction == 1) {
-                    detect(i + 1, j, 1);
-                    detect(i, j - 1, 2);
+                    detectNode(i + 1, j, 1);
+                    detectNode(i, j - 1, 2);
                 } else if (direction == 3) {
-                    detect(i, j - 1, 2);
-                    detect(i - 1, j, 3);
+                    detectNode(i, j - 1, 2);
+                    detectNode(i - 1, j, 3);
                 } else if (direction == 4) {
-                    detect(i - 1, j, 3);
-                    detect(i + 1, j, 1);
+                    detectNode(i - 1, j, 3);
+                    detectNode(i + 1, j, 1);
                 }
             }
         } else if (type.equals("wt3")) {
@@ -349,18 +349,18 @@ class TableGenerator {
                 throw new IllegalArgumentException("节点识别错误. 位置: [" + i + ", " + j + "]");
             } else {
                 if (direction == 0) {
-                    detect(i, j - 1, 2);
-                    detect(i - 1, j, 3);
-                    detect(i, j + 1, 4);
+                    detectNode(i, j - 1, 2);
+                    detectNode(i - 1, j, 3);
+                    detectNode(i, j + 1, 4);
                 } else if (direction == 1) {
-                    detect(i, j - 1, 2);
-                    detect(i, j + 1, 4);
+                    detectNode(i, j - 1, 2);
+                    detectNode(i, j + 1, 4);
                 } else if (direction == 2) {
-                    detect(i, j - 1, 2);
-                    detect(i - 1, j, 3);
+                    detectNode(i, j - 1, 2);
+                    detectNode(i - 1, j, 3);
                 } else if (direction == 4) {
-                    detect(i - 1, j, 3);
-                    detect(i, j + 1, 4);
+                    detectNode(i - 1, j, 3);
+                    detectNode(i, j + 1, 4);
                 }
             }
         } else if (type.equals("wt4")) {
@@ -368,42 +368,42 @@ class TableGenerator {
                 throw new IllegalArgumentException("节点识别错误. 位置: [" + i + ", " + j + "]");
             } else {
                 if (direction == 0) {
-                    detect(i + 1, j, 1);
-                    detect(i - 1, j, 3);
-                    detect(i, j + 1, 4);
+                    detectNode(i + 1, j, 1);
+                    detectNode(i - 1, j, 3);
+                    detectNode(i, j + 1, 4);
                 } else if (direction == 1) {
-                    detect(i, j + 1, 4);
-                    detect(i + 1, j, 1);
+                    detectNode(i, j + 1, 4);
+                    detectNode(i + 1, j, 1);
                 } else if (direction == 2) {
-                    detect(i + 1, j, 1);
-                    detect(i - 1, j, 3);
+                    detectNode(i + 1, j, 1);
+                    detectNode(i - 1, j, 3);
                 } else if (direction == 3) {
-                    detect(i - 1, j, 3);
-                    detect(i, j + 1, 4);
+                    detectNode(i - 1, j, 3);
+                    detectNode(i, j + 1, 4);
                 }
             }
         } else if (type.equals("w+")) {
             if (direction == 0) {
-                detect(i + 1, j, 1);
-                detect(i, j - 1, 2);
-                detect(i - 1, j, 3);
-                detect(i, j + 1, 4);
+                detectNode(i + 1, j, 1);
+                detectNode(i, j - 1, 2);
+                detectNode(i - 1, j, 3);
+                detectNode(i, j + 1, 4);
             } else if (direction == 1) {
-                detect(i + 1, j, 1);
-                detect(i, j - 1, 2);
-                detect(i, j + 1, 4);
+                detectNode(i + 1, j, 1);
+                detectNode(i, j - 1, 2);
+                detectNode(i, j + 1, 4);
             } else if (direction == 2) {
-                detect(i + 1, j, 1);
-                detect(i, j - 1, 2);
-                detect(i - 1, j, 3);
+                detectNode(i + 1, j, 1);
+                detectNode(i, j - 1, 2);
+                detectNode(i - 1, j, 3);
             } else if (direction == 3) {
-                detect(i, j - 1, 2);
-                detect(i - 1, j, 3);
-                detect(i, j + 1, 4);
+                detectNode(i, j - 1, 2);
+                detectNode(i - 1, j, 3);
+                detectNode(i, j + 1, 4);
             } else if (direction == 4) {
-                detect(i + 1, j, 1);
-                detect(i - 1, j, 3);
-                detect(i, j + 1, 4);
+                detectNode(i + 1, j, 1);
+                detectNode(i - 1, j, 3);
+                detectNode(i, j + 1, 4);
             }
         } else {
             if (table[i][j].getX() < 0)
@@ -423,7 +423,7 @@ class TableGenerator {
             for (int j = 0; j < yy; j++) {
                 if (table[i][j].getName().charAt(0) == 'w' && detected[i][j] <= 0) {
                     node++;
-                    detect(i, j, 0);
+                    detectNode(i, j, 0);
                 }
             }
         }
@@ -438,7 +438,49 @@ class TableGenerator {
         }
     }
 
+    private void detectMesh(int i, int j, int mesh) {
+        if (circuitTable[i][j] != -1) {
+            return;
+        } else {
+            circuitTable[i][j] = mesh;
+            if (circuitTable.length > i + 1)
+                detectMesh(i + 1, j, mesh);
+            if (circuitTable[0].length > j + 1)
+                detectMesh(i, j + 1, mesh);
+        }
+    }
+
     private void generateMeshCircuit() {
+        int mesh = 0;
+        for (int i = 0; i < circuitTable.length; i++) {
+            for (int j = 0; j < circuitTable[0].length; j++) {
+                if (circuitTable[i][j] == -1) {
+                    mesh++;
+                    detectMesh(i, j, mesh);
+                }
+            }
+        }
+
+        int[][] temp = new int[xx * 3][yy * 3];
+        for (int i = 0; i < circuitTable.length; i++) {
+            for (int j = 0; j < circuitTable[0].length; j++) {
+                temp[i][j] = circuitTable[i][j];
+            }
+        }
+        for (int i = 0; i < circuitTable.length; i++) {
+            for (int j = 0; j < circuitTable[0].length; j++) {
+                if (circuitTable[i][j] == 1
+                        || circuitTable[i - 1][j - 1] + circuitTable[i - 1][j] + circuitTable[i - 1][j + 1]
+                                + circuitTable[i][j - 1] + circuitTable[i][j + 1] + circuitTable[i + 1][j - 1]
+                                + circuitTable[i + 1][j] + circuitTable[i + 1][j + 1] >= circuitTable[i][j] * 8)
+                    temp[i][j] = 0;
+            }
+        }
+        for (int i = 1; i < temp.length - 1; i++) {
+            for (int j = 1; j < temp[0].length - 1; j++) {
+                circuitTable[i][j] = temp[i][j];
+            }
+        }
     }
 
     private void generateOutput() {

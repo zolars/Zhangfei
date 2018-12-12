@@ -95,9 +95,9 @@ public class CircuitDriver {
             new ImageGenerator(imageFolderName, table, detected, circuitTable);
 
             // solve the problem
-            // CircuitSolver solver = new CircuitSolver(input, timeStep,
-            // new PrintStream(new FileOutputStream(outputFileName)));
-            // solver.run(timeAll);
+            CircuitSolver solver = new CircuitSolver(input, timeStep,
+                    new PrintStream(new FileOutputStream(outputFileName)));
+            solver.run(timeAll);
             // System.out.println(solver.getResponse());
 
         } catch (Exception e) {

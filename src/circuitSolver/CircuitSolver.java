@@ -136,6 +136,7 @@ public class CircuitSolver {
         A = A.getMatrix(1, A.getRowDimension() - 1, 1, A.getColumnDimension() - 1);
         b = b.getMatrix(1, b.getRowDimension() - 1, 0, b.getColumnDimension() - 1);
 
+        // System.out.println("节点求解矩阵");
         // A.print(A.getColumnDimension(), A.getRowDimension());
         // b.print(b.getColumnDimension(), b.getRowDimension());
 

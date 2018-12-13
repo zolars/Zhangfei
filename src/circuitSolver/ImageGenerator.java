@@ -335,7 +335,7 @@ public class ImageGenerator {
         }
     }
 
-    private void generateCircuitImage(int[][] circuitTable, BufferedImage image, String targetFile) {
+    private void generateCircuitImage(BufferedImage image, String targetFile) {
         for (int i = 0; i < circuitTable.length; i++) {
             for (int j = 0; j < circuitTable[0].length; j++) {
                 // ͼƬȾɫ
@@ -404,6 +404,6 @@ public class ImageGenerator {
 
         BufferedImage voltageResultImage = generateVoltageImage(path + "\\VoltageResult.png");
         generateSimpleImage(voltageResultImage, path + "\\SimpleResult.png");
-        generateCircuitImage(circuitTable, voltageResultImage, path + "\\CircuitResult.png");
+        generateCircuitImage(voltageResultImage, path + "\\CircuitResult.png");
     }
 }

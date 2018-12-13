@@ -92,7 +92,8 @@ public class CircuitDriver {
             int[][] circuitTable = TableGenerator.getCircuitTable();
 
             showMeTheTables(table, detected, circuitTable);
-            new ImageGenerator(imageFolderName, table, detected, circuitTable);
+            System.out.println(input);
+            // new ImageGenerator(imageFolderName, table, detected, circuitTable);
 
             // solve the problem
             CircuitSolver solver = new CircuitSolver(input, timeStep,
